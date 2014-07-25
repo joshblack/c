@@ -54,6 +54,11 @@ int bar = 1;
 int a = 0, b = 1, c = 2;
 ```
 
+# Operators and Precedence
+
+
+
+
 # Arrays
 
 You can define an array by doing the following:
@@ -61,6 +66,17 @@ You can define an array by doing the following:
 ```c
 // defines an array of 10 integers
 int numbers[10];
+
+// array of 4 chars
+char names[4] = [1, 2, 3, 4];
+
+char name = ['josh', 'black', 'whoa', 'there']; 
+
+int longArray = {[0] = 1, [1] = 2, [999] = 3}; // array of size 1000
+
+multidimensional arrays
+int digits[2][2] = {{0, 1}, {1, 0}};
+                 = {0, 1, 1, 0};
 ```
 
 Arrays in C can only have one type of variable because they are impleted as a sequence of values in the computer's memory.
@@ -199,9 +215,68 @@ p.y = 5;
 draw(p); /* assume draw() receives a point and draws it on a screen */
 ```
 
+Structures can also hold pointers - which allows them to hold strings, or pointers to other structures as well (which is their real power). They can also hold other structures
+
+```c
+struct geofix {
+    float latitude;
+    float longitidue;
+};
+
+struct location {
+    char* description
+    struct geofix pos;
+} home_location = {"UFL", {42.9709, -85.8857}};
+
+home_location.pos.latitude;
+home_location.pos.longitude;
+```
+
+Can also do arrays of structures
+
+```c
+struct location {
+    char* description;
+    float lat;
+    float long;
+}
+
+struct location checkins[3] = {
+    {"UF", 0, 0},
+    {"Starbucks", 0, 0},
+    {"Home", 0, 0}
+}
+
+checkins[0].description;
+checkins[0].lat;
+checkins[0].long;
+```
+
+> Note: Structs are passed by value.
+
 ## Typedefs
 
-Typedefs allow us to define types with a different name.
+Typedefs allow us to create aliases for data types.
+
+Typedefs and arrays
+```c
+typedef char Buffer [1024];
+char b1[1024];
+Buffer b2; /* same as previous statement, b1 = b2 */
+```
+
+Typedefs and pointers
+```c
+typedef char *String;
+char *strl;
+String str2; /* str2 == str1 */
+```
+
+You define a typedef by doing the following:
+1. Write the statement as if a variable of the desired type was being declared
+2. Where the name of the declared variable would normally appear, substitute the new type name
+3. In front of everything else, place the keyword typedef
+
 
 ```c
 /* Can use the following syntax to remove the `struct` keyword from each time we want to define a new point
@@ -214,18 +289,19 @@ typedef struct {
 point p;
 ```
 
-Structures can also hold pointers - which allows them to hold strings, or pointers to other structures as well (which is their real power).
+# Unions
+
+Let us store different data types in the same location:
 
 ```c
-typedef struct {
-    char * brand;
-    int model;
-} vehicle;
-
-vehicle mycar;
-mycar.brand = "Ford";
-mycar.model = 2007;
+union indecision {
+    char c;
+    int i;
+    double d;
+};
 ```
+
+A variable of a union type will take up as much memory as the largest item it can hold.
 
 # Function arguments by reference
 
@@ -293,3 +369,33 @@ free(myperson);
 ```
 
 Free does not delete the myperson variable itself, but rather it releases the data that it points to.
+
+# Working with Files
+
+`fopen()` opens up text and binary files for read/write.
+`fclose()` close file when finished
+
+## Dealing with errors
+
+- `errno` - globally defined external integer that is that is set to the last error code.
+- `#include <errno.h>`
+- `ferror()` - returns errno for file props
+- `perror()` - handy output function for printing textual description of error.
+- `scanf()` - reads from input
+- `fscanf()` - inputs come from files. 
+- `fgetc()` - read text file character at a time.
+- `fgets()` - lets us read a line at a time
+- `fprintf()` - output goes to file
+- `fputc()` - write to a text file one character at a time
+- `fputs()` - let us write to a text file one line at a time
+
+# General Notes
+
+- Arrays let us define a multiplicity of homogenous chunks of data
+- Structs let us clump a group of logically related heterogeneous chunks of data in a single entity
+- typedefs just give us syntactical sugar to create aliases for types.
+
+// write a mixin function in C?
+How to add behavior to a struct?
+setup inheritance?
+
