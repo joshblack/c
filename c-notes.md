@@ -33,13 +33,12 @@ int main() {
     - `float`
     - `double`
 
-*Note* - C does not have a boolean type. Usually, it is defined using the following notation:
-
-```c
-#define BOOL char
-#define FALSE 0
-#define TRUE 1
-```
+`char` - normally consumes 1 byte in memory.
+`short` - 2 bytes
+`int` - 4 bytes
+`long` - 4 bytes
+`float` - 4 bytes
+`double` - 8 bytes
 
 ## Defining variables
 
@@ -345,7 +344,47 @@ Dynamic allocation of memory allows building complex data structures such as lin
 
 In order to allocate a chunk of memory dynamically, we need to already have a pointer. This pointer will store the location of the newly allocated memory.
 
-We can access memory that was allocated to us using that same pointer, and we can also use that pointer to free the memory we got once we finish using it
+We can access memory that was allocated to us using that same pointer, and we can also use that pointer to free the memory we got once we finish using it.
+
+As a programmer, you are responsible for:
+
+- Explicitly allocating the amount of memory that is needed and when it is needed (using `malloc()` and `calloc()`)
+- Explicity deallocate the memory when it is no longer needed. (`free()`)
+
+> To access C's memory allocation functions you need to include `stdlib.h`
+
+## The `malloc()` function
+
+- Used to allocate an arbitrarly sized chunk of memory
+
+`void *malloc(size_t size)`
+
+- size is the number of bytes to allocate (normally computed with `sizeof()`)
+- allocated memory is uninitialized
+- returns a pointer to the allocated memory, or NULL if error is encountered
+
+## The `calloc()` function
+
+- allocates memory for an array of *nmemb* members of size bytes each.
+
+`void *calloc(size_t nmemb, size_t size);`
+
+- nmemb is the number of members
+- size is the number of bytes to allocate for each member 
+- allocated memory is initialized to 0
+- returns a pointer on success, or NULL.
+
+
+## The `free()` function
+
+- Used to deallocate previously allocated memory
+
+`void free(void *ptr);`
+
+- ptr is a pointer to previously allocated memory (via `malloc()/calloc()`)
+- if ptr is invalid, or points to previously deallocated memory, behavior is undefined
+
+
 
 ```c
 typedef struct {
@@ -399,3 +438,67 @@ Free does not delete the myperson variable itself, but rather it releases the da
 How to add behavior to a struct?
 setup inheritance?
 
+# Standard I/O
+
+C defines a library of functions that support integration with standard input/output
+
+## `getchar()`
+
+```c
+/**
+ * Reads the next character from standard input (if available)
+ *
+ * Returns EOF when end of file or error conditions are encountered
+ */
+int getchar(void);
+```
+
+## `putchar()`
+
+```c
+/**
+ * Writes the character c (converted to an unsigned char) to standard output 
+ *
+ * returns the character that was written
+ */
+int putchar(int c);
+```
+
+## Formatted Output
+
+### `printf()`
+
+```c
+/* display formatted output to stdout */
+printf(format_str, arg1, arg2, ...);
+
+/* arguments are the variables to be printed */
+/* format string tells printf() how to display these arguments */
+
+/* example */
+printf("who: %s size: %d cost: %5.2f", "you", 12, 1.2);
+/* value in format_str replaced by args */
+```
+
+### `scanf()`
+
+Reads formatted input from standard input.
+
+```c
+/**
+ * Arguments are the addresses of variables that will store the read values
+ *
+ * format string tells scanf() how the input is formatted
+ */
+scanf(format_str, &arg1, &arg2, ...);
+
+/* Example: */
+/* Input data: y 101 */
+
+char c;
+int i;
+scanf("%c %d", &c, &i);
+
+/* c => y */
+/* i => 101 */
+```
