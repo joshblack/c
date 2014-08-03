@@ -5,10 +5,10 @@ If you want access to standard I/O functionality you include a header file entit
 ```c
 #include <stdio.h>
 
-// the main method executes for every program
-int main() {
-
-    // return 0 if the program is successful, anything > 0 is an error
+/* the main method executes for every program */
+int main() 
+{
+    /* return 0 if the program is successful, anything > 0 is an error */
     return 0;
 }
 ```
@@ -82,6 +82,46 @@ Arrays in C can only have one type of variable because they are impleted as a se
 
 # Strings
 
+A *string* is a character array terminated by a null character (\0).
+
+For example:
+```c
+/* a character string */
+char array_ch[7] = {'H', 'E', 'L', 'L', 'O', '!', '\0'};
+```
+
+A series of characters enclosed in double quotes is called a *string constant*. The C compiler automatically adds a null character at the end of the string to indicate its end.
+
+To initialize a character array you can specify its size or allow the C compilter to calculate it for you.
+
+```c
+/* make sure to account for the extra null character at the end of the string */
+char str[7] = "Hello!";
+
+/* or you can do the following */
+char str[] = "Hello!";
+```
+
+## String Constants vs Character Constants
+
+A string constant is a series of characters enclosed in double quotes. On the other hand, a character constant is enclosed by single quotes. 
+
+Example:
+```c
+char ch = 'x';
+char str[] = "x";
+```
+
+In the example above, only 1 byte is reserved for the character variable ch, and two bytes are allocated for the character array str in order for the null character to be appended to the end of it. 
+
+A string can also be interpreted as a char pointer. Therefore, you can assign a character string to a pointer variable directly. For example:
+
+```c
+char *ptr_string;
+ptr_string = "A character string"; /* valid */
+ptr_string = 'a'; /* invalid */
+*ptr_string = 'a'; /* valid */
+```
 ## Defining strings
 
 Strings in C are actually arrays of characters. We can use pointers to a character array to define simple strings as follows:
@@ -441,6 +481,14 @@ setup inheritance?
 # Standard I/O
 
 C defines a library of functions that support integration with standard input/output
+
+## Output formatting
+
+Format rule  |  Usage
+-------------|-------
+`%c`         | Outputs a single character
+`%d`         | Outputs a single digit
+`%p`         | Print out a memory address
 
 ## `getchar()`
 
