@@ -142,16 +142,257 @@ char name[] = "John Smith";
 char name[11] = "John Smith"; // adding one to the length of the string
 ```
 
+## Utility
+
+## Template
+
+```c
+#include <string.h>
+```
+
 ## String comparison
 
 ```c
-// Compares two strings
+/** 
+ * Compares two strings 
+ *
+ * returns 0 if the two strings are equal
+ * returns a different number if they are different
+ */
 int strncmp(string1, string2, comparisonLength) {}
-// returns 0 if the two strings are equal
-// returns a different number if they are different
 ```
 
+## String length
+```c
+/**
+ * Measure the length of a string
+ *
+ * Does not count the null character
+ */
+size_t strlen(const char *s);
+```
+
+Example:
+
+```c
+#include <stdio.h>
+#include <string.h>
+
+int main() 
+{
+    char str[] = "A string constant";
+    char *ptr_str = "Another string constant";
+
+    printf("String length: %d bytes\n", strlen(str));
+    printf("String length: %d bytes\n", strlen(ptr_str));
+    return 0;
+}
+```
+
+## Copying a String
+```c
+/**
+ * Copy a string from one array to another
+ *
+ * Returns the value of src if succesful
+ */
+char *strcpy(char *dest, const char *src);
+```
+
+## IO
+
+### `gets()`
+```c
+/**
+ * Read characters from the standard input stream
+ *
+ * @param s     the character array that contains a string.
+ * @return s, if successful, otherwise null pointer
+ */
+char *gets(char *s);
+```
+
+### `puts()`
+```c
+/**
+ * Used to write characters to the standard output stream (stdout)
+ *
+ * @param s     character array that contains a string
+ * @return 0 if succesful, otherwise a nonzero value is returned
+ */
+int puts(const char *s);
+```
+
+### `scanf()`
+```c
+/**
+ * An alternate way of reading strings from stdin. Can be used to read various types of input data.
+ * A null character is automatically appended to the array after the reading.
+ * 
+ * @return number of data items read from the stdin, otherwise it returns EOF (end of file)
+ */
+int scanf(const char *format, …);
+```
+
+Example Usage:
+```c
+#include <stdio.h>
+
+int main() 
+{   
+    char str[80];
+    int x, y;
+    float z;
+
+    printf("Enter two integers separated by a space:\n");
+    scanf("%d %d", &x, &y);
+
+    printf("Enter a floating point number:\n");
+    scanf("%f", &z);
+
+    printf("Enter a string:\n");
+    scanf("%s", str);
+
+    return 0;
+}
+```
+
+# Scope
+
+There are four types of scope:
+
+1) Block scope (Contained between {}'s)
+2) Function scope (Anything contained within a function)
+3) Program scope (Global variables)
+4) File scope - a global variable defined to be static has file scope.
+
+## Storage Class
+
+In C, the storage class of a variable refers to the combination of its spatial and temporal regions. Scope encompasses the spatial region of a variable, duration corresponds to a variables temporal region.
+
+There are 4 specifies and two modifiers that can be used to indicate the duration of a variable.
+
+### The `auto` Specifier
+
+> Indicates that the memory location of a variable is temporary. Rarely used because the duration of a variable with block scope is temporary by default.
+
+### The `static` Specifier
+
+> When a variable within a function is declared with the static specifier, the variable has a permanent duration. In other words, the memory storage allocated for the variable is not destroyed when the scope of the variable is exited, the value of the variable is maintained outside the scope, and if execution ever returns to the scope of the variable, the last value stored in the variable is still there.
+
+### The `register` Specifier
+
+> Can use this value to suggest to the compiler that this value should be stored into a register (which is faster that retrieving than memory).
+
+### The `extern` Specifier
+
+> Allows you to allude to a global variable specified in another file.
+
+### The `const` modifier
+
+> If you declare a variable with the const modifier, the content of the variable cannot be changed after it is initialized.
+
+### The `volatile` modifier
+
+> Used when you want to declare a variable whose value can be changed without any explicit assignment statement in your program. 
+
+
 # Functions
+
+## Declaring Functions
+
+### Declaration vs Definition
+
+- A ***function declaration*** alludes to a function that is defined elsewhere and specifies what kind of value is returned by the function. 
+- A ***function definition*** defines what the function does, as well as gives the number and type of arguments passed to the function.
+
+### Specifying return types
+
+> A function can be declared to return any data type, except an array or function. The return statement used in a function definition returns a single value whose type should match the one declared in the function declaration.
+
+By default, the return type of a function is int. 
+
+### Using Prototypes
+
+```c
+data_type_specifier  function_name(
+      data_type_specifier argument_name1,
+      data_type_specifier argument_name2,
+      data_type_specifier argument_name3,
+      .
+      .
+      .
+      data_type_specifier argument_nameN,
+);
+```
+
+## Prototyping Functions
+
+There are three cases regarding arguments being passed into functions:
+1. A function that takes no arguments
+2. A function that takes a fixed number of arguments
+3. A function that takes a variable number of arguments
+
+### A function that takes no arguments
+
+The declaration would be `data_type function_name(void)`.
+
+### A function that takes a fixed number of arguments
+
+`int function_1(int x, int y);`
+
+### A function that takes a multiple number of arugments
+
+```c
+data_type_specifier  function_name(
+      data_type_specifier argument_name1, ...
+);
+```
+
+#### Processing variable arguments
+
+There are three routines, declared in the header file `<stdarg.h>`, that enable you to write functions that take a variable number of arguments
+
+1. `va_start()`
+2. `va_arg()`
+3. `va_end()`
+
+Also included in `<stdarg.h>` is `va_list`, that defines an array type suitable for containing data items needed by `va_start()`, `va_arg()`, and `va_end()`
+
+#### va_start()
+
+```c
+#include <stdarg.h>
+
+/**
+ * @param ap, the name of the array about to be initialized by the va_start macro routine
+ * @param lastfix, the argument before the ellipsis in the function declaration
+ */
+void va_start(va_list ap, lastfix);
+```
+
+#### va_arg()
+
+```c
+/**
+ * Allows you to be able to deal with the type and value of the next argument. 
+ * Is used to get the next argument passed to the function.
+ *
+ * @param ap, the name of the array that is initialized by the va_arg macro routine
+ * @param data_type, the data type of the argument passed
+ */
+type va_arg(va_list ap, data_type);
+```
+
+#### va_end()
+
+```c
+/**
+ * Used to facilitate a normal return from your function after all your arguments have been processed
+ * @param ap, the name of the array that is initialized by the va_end macro routine
+ */
+void va_end(va_list ap);
+```
 
 - Functions receive either a fixed or variable amount of arguments
 - Functions can only return one value, or no value
@@ -162,6 +403,8 @@ int foo(int bar) {
     return bar;
 }
 ```
+
+#### Example processing multiple variables
 
 We define the return type, then the function name and parameters. The parameters are pairs representing the type of the argument and its name.
 
@@ -196,7 +439,7 @@ A pointer is essentially a simple integer variable which holds a memory address 
 ## Strings as pointers
 
 ```c
-char * name = "John";
+char *name = "John";
 ```
 
 This line does the following:
@@ -484,11 +727,15 @@ C defines a library of functions that support integration with standard input/ou
 
 ## Output formatting
 
+Usage: `printf("Some string with %cormat rule.", 'f');`
+
 Format rule  |  Usage
 -------------|-------
 `%c`         | Outputs a single character
 `%d`         | Outputs a single digit
-`%p`         | Print out a memory address
+`%p`         | Outputs a memory address
+`%lu`        | Outputs a long unsigned value
+'%s'         | Outputs a string
 
 ## `getchar()`
 

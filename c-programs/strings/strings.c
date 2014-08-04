@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 int main()
 {
@@ -41,13 +42,19 @@ int main()
         printf("%c", *ptr_str++);
 
         /* or the following: 
-        
+
         printf("%c", *ptr_str);
         ptr_str++;
         */
     }
 
     printf("\n");
+
+    ptr_str = "Reinitialize pointer string";
+
+    printf("String length: %lu bytes.\n", strlen(str1));        /* 17 bytes */
+    printf("String length: %lu bytes.\n", strlen(str2));        /* 23 bytes */
+    printf("String length: %lu bytes.\n", strlen(ptr_str));     /* 27 bytes */
 
     return 0;
 }
