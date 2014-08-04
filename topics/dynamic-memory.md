@@ -25,7 +25,7 @@ As a programmer, you are responsible for:
 void *malloc(size_t size);
 ```
 
-[Example](malloc.c)
+[Example](../c-programs/memory/malloc.c)
 
 ## The `calloc()` function
 
