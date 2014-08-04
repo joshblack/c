@@ -1,17 +1,5 @@
-# Learning C
-
-If you want access to standard I/O functionality you include a header file entitled `stdio.h`. The basic structure for a C program is the following:
-
-```c
-#include <stdio.h>
-
-/* the main method executes for every program */
-int main() 
-{
-    /* return 0 if the program is successful, anything > 0 is an error */
-    return 0;
-}
-```
+Learning C
+==========
 
 # Variable and Types
 
@@ -43,37 +31,40 @@ int main()
 ## Defining variables
 
 ```c
-// variable instantiation
+/* variable instantiation */
 int foo;
 
-// variable declaration
+/* variable declaration */
 int bar = 1;
 
-// multiple variable declaration
+/* multiple variable declaration */
 int a = 0, b = 1, c = 2;
 ```
 
-# Operators and Precedence
+# Operators
 
+Usefull literal translations of certain operators.
 
-
+Operator    | Translation
+------------|--------------
+`*`         | "What's at ___"
+`&`         | "The address of ___"
 
 # Arrays
 
 You can define an array by doing the following:
 
 ```c
-// defines an array of 10 integers
+/* defines an array of 10 integers */
 int numbers[10];
 
-// array of 4 chars
-char names[4] = [1, 2, 3, 4];
+/* array of 4 chars */
+char initial[4] = ['j', 'b', 'g', 'e'];
 
-char name = ['josh', 'black', 'whoa', 'there']; 
+/* array of size 1000 */
+int longArray = {[0] = 1, [1] = 2, [999] = 3}; 
 
-int longArray = {[0] = 1, [1] = 2, [999] = 3}; // array of size 1000
-
-multidimensional arrays
+/* multidimensional arrays */
 int digits[2][2] = {{0, 1}, {1, 0}};
                  = {0, 1, 1, 0};
 ```
@@ -406,23 +397,54 @@ int foo(int bar) {
 
 #### Example processing multiple variables
 
-We define the return type, then the function name and parameters. The parameters are pairs representing the type of the argument and its name.
-
 ```c
-/* function declaration */
-int foo(int bar);
+#include <stdio.h>
+#include <stdarg.h>
 
-int main() {
-    /* calling foo from main */
-    printf("The value of foo is %d", foo(1));
+double AddDouble(int x, ...);
+
+int main()
+{
+    double d1 = 1.5;
+    double d2 = 2.5;
+    double d3 = 3.5;
+    double d4 = 4.5;
+
+    printf("Given an argument: %2.1f\n", d1);
+    printf("The result returned by AddDouble() is: %2.1f\n\n", AddDouble(1, d1));
+
+    printf("Given arguments: %2.1f and %2.1f\n", d1, d2);
+    printf("The result returned by AddDouble() is: %2.1f\n\n", AddDouble(2, d1, d2));
+
+    printf("Given arguments: %2.1f, %2.1f and %2.1f\n", d1, d2, d3);
+    printf("The result returned by AddDouble() is: %2.1f\n\n",
+       AddDouble(3, d1, d2, d3));
+
+    printf("Given arguments: %2.1f, %2.1f, %2.1f, and %2.1f\n", d1, d2, d3, d4);
+    printf("The result returned by AddDouble() is: %2.1f\n",
+       AddDouble(4, d1, d2, d3, d4));
+
+    return 0;
 }
 
-int foo(int bar) {
-    return bar + 1;
+double AddDouble(int x, ...)
+{
+    va_list arglist;
+    int i;
+    double result = 0.0;
+
+    printf("The number of arguments is: %d\n", x);
+    va_start(arglist, x);
+
+    for (i = 0; i < x; i++) {
+        result += va_arg(arglist, double);
+    }
+
+    va_end(arglist);
+
+    return result;
 }
 ```
-
-To define a function that has no return value simply use `void` at the beginning of its declaration.
 
 # Pointers
 
@@ -473,6 +495,170 @@ a += 1;
 /* is equivalent to */
 *pointer_to_a += 1;
 ```
+
+## Pointer Arithmetic
+
+> You can move the position of a pointer by adding or subtracting integers to or from the pointer.
+
+```c
+/**
+ * Indicates to the compiler to move to the memory location that is one byte away from the
+ * current position of ptr_string
+ */
+ptr_str + 1;
+```
+
+It's important to note that the addition or subtraction of some integer does not necessarily correspond 1:1 with bytes, but rather it adjusts the address over one element of the type of the pointer you are adjusting.
+
+As a result, when you perform `pointer_name + n`, the compiler is actually doing the following:
+
+```c
+data_type_specifier *pointer_name;
+
+pointer_name + n * sizeof(data_type_specifier);
+```
+
+### Subtracting Pointers
+
+When subtracting pointers, you don't get a result with the amount of bytes between the two pointers but rather the number of that data_type between the two values. 
+
+A good example to illustrate this would be the following:
+
+```c
+/* Everything in pointer land is about offsets. When you say: */
+int array[10];
+array[7] = 42;
+
+/* this translates to... */
+*( &array[0] + 7 ) = 42;
+
+/* which is literally translated as... */
+* = "what's at"
+(
+    & = "the address of"
+    array[0] = "the first slot in array"
+    plus 7
+)
+set that thing to 42
+
+/* so, if we can add 7 to make the offset to the right place, then we need to be able to go the other direction */
+&array[0] + 7 == &array[7]
+
+/* for sanity, and symmetry... */
+&array[7] - &array[0] == 7
+```
+
+This reinforces the following section...
+
+## Pointers and Arrays
+
+> Pointers and arrays have a close relationship. You can accress an array through a pointer that contains the start address of the array. You can also access array elements through pointers.
+
+Any array name that is not followed by a subscript is interpreted as a pointer to the first element of the array.  As a result, you can assign the start address of the array to a pointer of the same data type and subsequently access indexed elements of that array by using the appropriate offset.
+
+## Pointers and Functions
+
+### Passing Arrays to Functions
+
+> Arrays decay immediately into pointers and, as such, an array is never actually passed to a function.
+
+Therefore,
+
+```c
+void f(char a[]) { ... }
+/* actually is... */
+void f(char *a) { ... }
+```
+
+This makes sense because of what we mentioned earlier, that an array name that is not followed by a subscript is interpreted as a pointer to the first element of the array.
+
+Actual Example:
+
+```c
+#include <stdio.h>
+
+int AddThree(int list[]);
+
+int main()
+{
+    int sum, list[3];
+
+    printf("Enter three integers separated by spaces:\n");
+    scanf("%d%d%d", &list[0], &list[1], &list[2]);
+
+    sum = AddThree(list);
+
+    printf("The sum of the three integers is: %d\n", sum);
+
+    return 0;
+}
+
+int AddThree(int list[])
+{
+    int i;
+    int result = 0;
+
+    for (i = 0; i < 3; i++) {
+        result += list[i];
+    }
+
+    return result;
+}
+```
+
+### Passing Pointers to Functions
+
+> Since the address of the first element in an array is the start address of the array itself, we can assign the start address of an array to a pointer and then pass the pointer name to a function.
+
+Example:
+```c
+#include <stdio.h>
+
+void ChPrint(char *ch);
+int DataAdd(int *list, int max);
+
+int main()
+{
+    char str[] = "It's a string!";
+    char *ptr_str;
+
+    int list[5] = {1, 2, 3, 4, 5};
+    int *ptr_int;
+
+    /* assign addr to pointer */
+    ptr_str = str;
+    ChPrint(ptr_str);
+    ChPrint(str);
+
+    /* assign addr to pointer */
+    ptr_int = list
+    printf("The sum returned by DataAdd(): %d\n", DataAdd(ptr_int, 5));
+    printf("The sum returned by DataAdd(): %d\n", DataAdd(list, 5));
+
+    return 0;
+}
+
+void ChPrint(char *ch) 
+{
+    printf("%s\n", ch);
+}
+
+int DataAdd(int *list, int max)
+{
+    int i;
+    int sum = 0;
+
+    for (i = 0; i < max; i++) {
+        sum += list[i];
+        /* sum += *(list + i) */
+    }
+
+    return sum;
+}
+```
+
+## Passing Multidimensional Arrays as Arguments
+
 
 # Structures
 
@@ -735,7 +921,7 @@ Format rule  |  Usage
 `%d`         | Outputs a single digit
 `%p`         | Outputs a memory address
 `%lu`        | Outputs a long unsigned value
-'%s'         | Outputs a string
+`%s `        | Outputs a string
 
 ## `getchar()`
 

@@ -2,10 +2,10 @@ all: clean compile
 
 # target
 compile:
-	gcc -o main strings/string-io.c
+	gcc -o main pointers/ptr_arithmetic.c
 
 clean:
-	rm -rf *.o
+	rm -rf **/*.o
 
 # Structure
 # Target: Dependencies
