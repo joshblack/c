@@ -23,7 +23,7 @@ You define a typedef by doing the following:
 
 
 ```c
-/* Can use the following syntax to remove the `struct` keyword from each time we want to define a new point
+/* Can use the following syntax to remove the `struct` keyword from each time we want to define a new point */
 typedef struct {
     int x;
     int y;
