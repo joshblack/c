@@ -45,4 +45,4 @@ TWO_BYTE i, j;
 int i, j;
 ```
 
-[Example](c-learning/c-programs/typedef.c)
+[Example](../c-programs/typedef.c)

@@ -1,22 +1,6 @@
 Learning C
 ==========
 
-# Variable and Types
-
-
-## Defining variables
-
-```c
-/* variable instantiation */
-int foo;
-
-/* variable declaration */
-int bar = 1;
-
-/* multiple variable declaration */
-int a = 0, b = 1, c = 2;
-```
-
 # Operators
 
 Usefull literal translations of certain operators.
@@ -26,102 +10,6 @@ Operator    | Translation
 `*`         | "What's at ___"
 `&`         | "The address of ___"
 
-# Structures
-
-C structures are special, large variables which contain several named variables inside.
-
-Structures are used for:
-- Serialization of data
-- Passing multiple arguments in and out of functions through a single argument
-- Data structures such as linked lists, binary trees, etc.
-
-The most basic example of structures are **points**, which are a single entity that contains two variables - `x` and `y`. Let's define a point in a two-dimensional point:
-
-```c
-struct point {
-    int x;
-    int y;
-}
-
-struct point p;
-p.x = 10;
-p.y = 5;
-draw(p); /* assume draw() receives a point and draws it on a screen */
-```
-
-Structures can also hold pointers - which allows them to hold strings, or pointers to other structures as well (which is their real power). They can also hold other structures
-
-```c
-struct geofix {
-    float latitude;
-    float longitidue;
-};
-
-struct location {
-    char* description
-    struct geofix pos;
-} home_location = {"UFL", {42.9709, -85.8857}};
-
-home_location.pos.latitude;
-home_location.pos.longitude;
-```
-
-Can also do arrays of structures
-
-```c
-struct location {
-    char* description;
-    float lat;
-    float long;
-}
-
-struct location checkins[3] = {
-    {"UF", 0, 0},
-    {"Starbucks", 0, 0},
-    {"Home", 0, 0}
-}
-
-checkins[0].description;
-checkins[0].lat;
-checkins[0].long;
-```
-
-> Note: Structs are passed by value.
-
-## Typedefs
-
-Typedefs allow us to create aliases for data types.
-
-Typedefs and arrays
-```c
-typedef char Buffer [1024];
-char b1[1024];
-Buffer b2; /* same as previous statement, b1 = b2 */
-```
-
-Typedefs and pointers
-```c
-typedef char *String;
-char *strl;
-String str2; /* str2 == str1 */
-```
-
-You define a typedef by doing the following:
-1. Write the statement as if a variable of the desired type was being declared
-2. Where the name of the declared variable would normally appear, substitute the new type name
-3. In front of everything else, place the keyword typedef
-
-
-```c
-/* Can use the following syntax to remove the `struct` keyword from each time we want to define a new point
-typedef struct {
-    int x;
-    int y;
-} point;
-
-/* can now call */
-point p;
-```
 
 # Unions
 
@@ -136,43 +24,6 @@ union indecision {
 ```
 
 A variable of a union type will take up as much memory as the largest item it can hold.
-
-# Function arguments by reference
-
-Function arguments are passed by value, which means they are copied into and out of functions. If we copied pointers to values instead of values themselves then it would enable us to give fu nctions control over variables and structores of the parent functions and not just copy them.
-
-```c
-void addone(int * n) {
-    (*n)++;
-}
-
-int n;
-printf("Before: %d\n", n);
-addone(&n);
-printf("After: %d\n", n);
-```
-
-This function receives a pointer to the variable n as an argument and as a result it can manipulate it because it knows where the variable is stored in memory.
-
-Notice that we must pass a **reference** to the variable `n` inside of the function call, and not the variable itself. This is done so that the function knows the address of the variable, and won't just receive a copy of the variable itself.
-
-## Pointers to structures
-
-You can also pass in pointers to structures as parameters in your functions. This allows us to dereference a structure and access one of its internal members.
-
-```c
-void move(point * p) {
-    (*p).x++;
-    (*p).y++;
-}
-
-/* OR */
-void move (point * p) {
-    p->x++;
-    p->y++;
-}
-```
-
 
 # Working with Files
 

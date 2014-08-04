@@ -11,6 +11,8 @@ My collection of notes on C, including write-ups, programs, and additional resou
 - [Scope](topics/scope.md)
 - [Functions](topics/functions.md)
 - [Pointers](topics/pointers.md)
+- [Structures](topics/structures.md)
+- [Type Def] (topics/typedefs.md)
 - [Dynamic Memory Allocation](topics/dynamic-memory.md)
 - [Program Examples](c-programs)
 
