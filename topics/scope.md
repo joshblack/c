@@ -21,6 +21,47 @@ There are 4 specifies and two modifiers that can be used to indicate the duratio
 
 > When a variable within a function is declared with the static specifier, the variable has a permanent duration. In other words, the memory storage allocated for the variable is not destroyed when the scope of the variable is exited, the value of the variable is maintained outside the scope, and if execution ever returns to the scope of the variable, the last value stored in the variable is still there.
 
+For Example:
+
+```c
+#include <stdio.h>
+
+void foo() {
+    int a = 10;
+    static int sa = 10;
+
+    a += 5;
+    sa += 5;
+
+    prinf("a = %d, sa = %d\n", a, sa);
+}
+
+int main(void) {
+    int i;
+
+    for (i = 0; i < 10; i++) {
+        foo();
+    }
+}
+```
+
+Outputs:
+
+a       |       sa
+--------|-----------
+15      |   15
+15      |   20
+15      |   25
+15      |   30
+
+etc...
+
+This means that `static` is useful for for maintaining state between invocations if you don't want to use global variables. Shouldn't use this though...makes your code not thread safe.
+
+
+> `static` is used widely as an "access control" feature. If you have a .c file implementing some functionality, it usually exposes only a few "public" functions to users. The rest of its functions should be made static, so that the user won't be able to access them. This is encapsulation, a good practice
+
+Therefore, `static` is used to set the scope of a global variable and functions to their containing files. 
 ### The `register` Specifier
 
 > Can use this value to suggest to the compiler that this value should be stored into a register (which is faster that retrieving than memory).

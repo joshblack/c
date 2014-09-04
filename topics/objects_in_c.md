@@ -134,3 +134,7 @@ void * new (const void * type, ...)
     int * p;
 }
 ```
+
+# Dynamic Linkage and Generic Functions
+## 2.1 Constructors and Destructors
+
